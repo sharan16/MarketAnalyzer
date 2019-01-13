@@ -12,7 +12,7 @@ reddit = praw.Reddit(client_id = 'HrXPcMKV26wpNQ',
 for submission in reddit.subreddit('apple').hot(limit=10):
     print(submission.title)
 s = Sentiment_analyzer()
-s.classify("The expensive design flaw with current gen MacBook Pros: fragile display flex cable")
+s.classify("The expensive design flaw with current gen MacBook Pros: fragile display flex cable ")
 print(s.evaluate())
 
 print(s.item_count)
