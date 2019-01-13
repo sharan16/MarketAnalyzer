@@ -9,7 +9,6 @@ class Sentiment_analyzer:
 		print("class created")
 	
 	def classify(self, text):
-		print("classify")
 		response = requests.post("http://text-processing.com/api/sentiment/", data = {'text':text})
 		print(response.text)
 		self.pos += response.json()["probability"]["pos"]
