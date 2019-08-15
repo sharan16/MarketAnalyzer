@@ -40,4 +40,4 @@ ax2.bar(df.index,df['Volume'])
 
 candlestick_ohlc(ax1,df_ohlc.values,width=2,colorup='g')
 ax2.fill_between(df_volume.index.map(mdates.date2num),df_volume.values,0)
-plt.show()
+#plt.show()
