@@ -1,4 +1,4 @@
-# MarketAnalyzer
+# MarketPredictor
 
 A python application that gets yahoo finance data regarding SP500 companies and uses machine learning models for analysis
 
