@@ -4,6 +4,7 @@ import pickle
 import requests
 import pandas_datareader.data as web
 import datetime as dt
+import pandas as pd
 
 def save_tkrs():
     if not os.path.isfile('sp500tkrs.pkl'):
@@ -38,5 +39,21 @@ def get_data_yahoo(reload_sp500 = False):
             df.to_csv('stock_dfs/{}.csv'.format(tkr))
         else:
             print('Already have {}.csv'.format(tkr))
+def compile_data():
+    with open("sp500tkrs.pkl",'rb') as f:
+        tkrs = pickle.load(f)
+    main_df =pd.DataFrame()
+    for count,tkr in enumerate(tkrs):
+        if os.path.exists('stock_dfs/{}.csv'.format(tkr)):
+            df = pd.read_csv('stock_dfs/{}.csv'.format(tkr))
+            df.set_index('Date',inplace = True)
+            df.rename(columns = {'Adj Close': tkr}, inplace = True)
+            df.drop(['Open','High','Low','Close','Volume'],1, inplace= True)
+            if main_df.empty:
+                main_df = df
+            else:
+                main_df = main_df.join(df, how = 'outer')
+            #print(main_df.head())
+            main_df.to_csv('SP500data.csv')
 
-get_data_yahoo()  
+compile_data()
