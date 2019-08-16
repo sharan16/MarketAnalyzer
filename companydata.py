@@ -5,7 +5,8 @@ import requests
 import pandas_datareader.data as web
 import datetime as dt
 import pandas as pd
-
+import numpy as np
+import matplotlib.pyplot as plt
 def save_tkrs():
     if not os.path.isfile('sp500tkrs.pkl'):
         response = requests.get("https://www.slickcharts.com/sp500")
@@ -55,5 +56,29 @@ def compile_data():
                 main_df = main_df.join(df, how = 'outer')
             #print(main_df.head())
             main_df.to_csv('SP500data.csv')
+def visualize_data():
+    df = pd.read_csv('SP500Data.csv')
+    df_corr = df.corr()
+    print(df_corr.head())
+    data = df_corr.values
+    fig = plt.figure()
+    ax = fig.add_subplot(1,1,1)
+    heatmap = ax.pcolor( data,cmap=plt.cm.RdYlGn )
+    fig.colorbar(heatmap)
+    ax.set_xticks(np.arange(data.shape[1]) + 0.5, minor=False)
+    ax.set_yticks(np.arange(data.shape[0]) + 0.5, minor=False)
+    ax.invert_yaxis()
+    ax.xaxis.tick_top()
+    column_labels = df_corr.columns
+    row_labels = df_corr.index
+    ax.set_xticklabels(column_labels)
+    ax.set_yticklabels(row_labels)
+    plt.xticks(rotation = 90)
+    heatmap.set_clim(-1,1)
+    plt.tight_layout()
+    plt.show()
 
-compile_data()
+#compile_data()
+
+
+visualize_data()
