@@ -2,6 +2,9 @@ import numpy as np
 import pandas as pd
 import pickle
 from collections import Counter
+from sklearn.model_selection import train_test_split
+from sklearn import svm, neighbors
+from sklearn.ensemble import VotingClassifier, RandomForestClassifier
 def normalize_data_for_labels(tkr):
     hm_days = 7
     df = pd.read_csv('sp500data.csv', index_col=0)
@@ -49,6 +52,27 @@ def extract_feature_sets(tkr):
     y = df['{}_target'.format(tkr)].values
     
     return X,y,df
+def ml_analysis(tkr):
+    X,y,df = extract_feature_sets(tkr)
+    X_train,X_test,y_train,y_test = train_test_split(X,y,test_size = 0.25)
+    
+    clf = VotingClassifier([
+        ('lsvc', svm.LinearSVC()),
+        ('knn',neighbors.KNeighborsClassifier()),
+        ('rdor', RandomForestClassifier())
+    ])
+    
+    
+    
+    
+    clf.fit(X_train,y_train)
+    # print(clf)
+    confidence = clf.score(X_test,y_test)
+    print('Accuracy:', confidence)
+    predictions = clf.predict(X_test)
+    print("Predicted Spread",Counter(predictions))
+    print("Excpected Spread",Counter(y_test))
+    return confidence
 
-X,y,df = extract_feature_sets('AAPL')
+ml_analysis('AAPL')
 # print(df.head())
